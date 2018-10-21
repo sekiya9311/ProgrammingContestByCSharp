@@ -1,0 +1,12 @@
+{
+  "name": "type-script",
+  "version": "0.0.0",
+  "description": "TypeScript",
+  "main": "app.js",
+  "author": {
+    "name": "sekiy"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.87"
+  }
+}
