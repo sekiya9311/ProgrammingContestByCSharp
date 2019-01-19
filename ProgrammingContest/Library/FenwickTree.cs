@@ -1,19 +1,23 @@
 ﻿
 namespace ProgrammingContest.Library
 {
+    using System.Linq;
+
     class FenwickTree
     {
         private readonly long[] bit;
         public FenwickTree(int n)
         {
-            this.bit = new long[n];
+            this.bit = Enumerable.Repeat(0L, n).ToArray();
         }
 
         public void Add(int idx, long val)
         {
-            for (int i = idx; i < this.bit.Length; i |= i + 1)
+            idx++;
+            while (idx - 1 < this.bit.Length)
             {
-                this.bit[i] += val;
+                bit[idx - 1] += val;
+                idx += idx & -idx;
             }
         }
 
@@ -21,16 +25,15 @@ namespace ProgrammingContest.Library
         public long Get(int r)
         {
             long ret = 0;
-            for (int i = r - 1; i >= 0; i = (i & (i + 1)) - 1)
+            while (r > 0)
             {
-                ret += this.bit[i];
+                ret += bit[r - 1];
+                r -= r & -r;
             }
             return ret;
         }
         // [l, r)
         public long Get(int l, int r)
-        {
-            return this.Get(r) - this.Get(l - 1);
-        }
+            => this.Get(r) - this.Get(l);
     }
 }

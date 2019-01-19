@@ -1,40 +1,42 @@
 ﻿
 namespace ProgrammingContest.Library
 {
+    using System.Linq;
+
     class FenwickTreeByMod
     {
         private readonly long[] bit;
         private readonly int MOD;
-        public FenwickTreeByMod(int n, int MOD)
+        public FenwickTreeByMod(int n, int MOD = (int)1e9 + 7)
         {
-            this.bit = new long[n];
+            this.bit = Enumerable.Repeat(0L, n).ToArray();
             this.MOD = MOD;
         }
         public void Add(int idx, long val)
         {
-            val += MOD;
-            val %= MOD;
-            for (int i = idx; i < this.bit.Length; i |= i + 1)
+            val = ((val % MOD) + MOD) % MOD;
+            idx++;
+            while (idx - 1 < this.bit.Length)
             {
-                this.bit[i] += val;
-                this.bit[i] %= MOD;
+                bit[idx - 1] += val;
+                bit[idx - 1] %= MOD;
+                idx += idx & -idx;
             }
         }
         // [0, n)
         public long Get(int r)
         {
             long ret = 0;
-            for (int i = r - 1; i >= 0; i = (i & (i + 1)) - 1)
+            while (r > 0)
             {
-                ret += this.bit[i];
+                ret += bit[r - 1];
                 ret %= MOD;
+                r -= r & -r;
             }
             return ret;
         }
         // [l, r)
         public long Get(int l, int r)
-        {
-            return (this.Get(r) - this.Get(l - 1) + MOD) % MOD;
-        }
+            => (this.Get(r) - this.Get(l) + MOD) % MOD;
     }
 }
