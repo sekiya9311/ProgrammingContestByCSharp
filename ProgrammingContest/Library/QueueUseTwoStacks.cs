@@ -11,12 +11,12 @@ namespace ProgrammingContest.Library
         /// <summary>
         /// 1つ目のStack
         /// </summary>
-        public Stack<T> FirstStack { get; }
+        private Stack<T> FirstStack { get; }
 
         /// <summary>
         /// 2つめのStack
         /// </summary>
-        public Stack<T> SecondStack { get; }
+        private Stack<T> SecondStack { get; }
 
         /// <summary>
         /// 新しいインスタンスの初期化を行う
@@ -73,12 +73,6 @@ namespace ProgrammingContest.Library
         /// <summary>
         /// 格納されている要素の数を返す
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return FirstStack.Count + SecondStack.Count;
-            }
-        }
+        public int Count => FirstStack.Count + SecondStack.Count;
     }
 }

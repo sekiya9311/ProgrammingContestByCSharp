@@ -48,6 +48,7 @@
     <Compile Include="Library\FenwickTree.cs" />
     <Compile Include="Library\FenwickTreeByMod.cs" />
     <Compile Include="Library\Graph.cs" />
+    <Compile Include="Library\ModCalc.cs" />
     <Compile Include="Library\Pair.cs" />
     <Compile Include="Library\QueueUseTwoStacks.cs" />
     <Compile Include="Library\SegmentTree.cs" />

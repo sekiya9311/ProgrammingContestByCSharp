@@ -19,22 +19,19 @@ namespace ProgrammingContest.Library
                 this.Cost = cost;
             }
 
-            public int CompareTo(Edge other)
-            {
-                return Math.Sign(this.Cost - other.Cost);
-            }
+            public int CompareTo(Edge other) 
+                => Math.Sign(this.Cost - other.Cost);
         }
         public List<Edge>[] ListGraph { get; }
         public Graph(int N)
         {
-            this.ListGraph =
-                new List<Edge>[N].Select(e => new List<Edge>())
-                                 .ToArray();
+            this.ListGraph = Enumerable.Range(0, N)
+                .Select(e => new List<Edge>())
+                .ToArray();
         }
         public void AddEdge(int from, int to, long cost)
-        {
-            this.ListGraph[from].Add(new Edge(to, cost));
-        }
+            => this.ListGraph[from].Add(new Edge(to, cost));
+
         public long[,] MatrixGraph()
         {
             int N = this.ListGraph.Length;
@@ -149,6 +146,5 @@ namespace ProgrammingContest.Library
             return tsort.Count == N ? tsort.ToArray() 
                                     : null;
         }
-
     }
 }

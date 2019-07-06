@@ -11,10 +11,8 @@ namespace ProgrammingContest.Library
         /// <summary>
         /// 配列一覧表示
         /// </summary>
-        string EnumerableToString<T>(IEnumerable<T> enumerable, string sep = " ")
-        {
-            return string.Join(sep, enumerable.Select(el => el.ToString()));
-        }
+        string EnumerableToString<T>(IEnumerable<T> enumerable, string sep = " ") 
+            => string.Join(sep, enumerable.Select(el => el.ToString()));
 
         /// <summary>
         /// バイナリ法による法mod のべき乗計算 O(log p)
@@ -35,7 +33,11 @@ namespace ProgrammingContest.Library
         /// </summary>
         IEnumerable<int> SieveOfEratosthenes(int maxVal)
         {
-            bool[] isPrime = Enumerable.Range(0, maxVal + 1).Select(el => true).ToArray();
+            bool[] isPrime = Enumerable.Repeat(true, maxVal + 1).ToArray();
+            if (isPrime.Length < 2)
+            {
+                yield break;
+            }
             isPrime[0] = isPrime[1] = false;
             for (int i = 2; i < maxVal + 1; i++)
             {
@@ -72,10 +74,8 @@ namespace ProgrammingContest.Library
         /// <summary>
         /// 文字列反転 {多分 O(N)}
         /// </summary>
-        string ReverseStr(string str)
-        {
-            return string.Concat(str.Reverse());
-        }
+        string ReverseStr(string str) 
+            => string.Concat(str.Reverse());
 
         /// <summary>
         /// 配列初期化 O(N)
@@ -104,10 +104,8 @@ namespace ProgrammingContest.Library
         bool NextPermutation<T>(T[] ar) where T : IComparable<T>
         {
             int left = ar.Length - 1;
-            Func<int, int, int> CompForCalcNextPermutation = (i, j) =>
-            {
-                return ar[i].CompareTo(ar[j]);
-            };
+            int CompForCalcNextPermutation(int i, int j) 
+                => ar[i].CompareTo(ar[j]);
             while (0 < left && CompForCalcNextPermutation(left - 1, left) >= 0)
             {
                 left--;
@@ -152,10 +150,7 @@ namespace ProgrammingContest.Library
         /// 最小公倍数 O(log max(a, b))
         /// Gcd使用
         /// </summary>
-        long Lcm(long a, long b)
-        {
-            return a / Gcd(a, b) * b;
-        }
+        long Lcm(long a, long b) => a / Gcd(a, b) * b;
 
         /// <summary>
         /// 約数列挙 O(√N)
@@ -183,5 +178,13 @@ namespace ProgrammingContest.Library
             val = (val & 0x00ff00ff) + (val >> 8 & 0x00ff00ff);
             return (int)((val & 0x0000ffff) + (val >> 16 & 0x0000ffff));
         }
+
+        IDictionary<TKey, TValue> Merge<TKey, TValue>(
+            IEnumerable<IDictionary<TKey, TValue>> source,
+            Func<IEnumerable<TValue>, TValue> aggregate)
+            => source
+                .SelectMany(e => e.AsEnumerable())
+                .ToLookup(e => e.Key)
+                .ToDictionary(e => e.Key, e => aggregate(e.Select(el => el.Value)));
     }
 }

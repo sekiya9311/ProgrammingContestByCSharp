@@ -2,6 +2,8 @@
 
 namespace ProgrammingContest.Library
 {
+    using System.Collections.Generic;
+
     class SkewHeap<T> where T : IComparable<T>
     {
         private class HeapNode
@@ -39,38 +41,43 @@ namespace ProgrammingContest.Library
             }
         }
         private HeapNode topNode;
-        private int count_;
 
-        public int Count { get { return this.count_; } }
+        public int Count { get; private set; }
 
-        public SkewHeap(Func<T, T, int> comp = null)
+        public SkewHeap() : this(null, null) { }
+
+        public SkewHeap(Func<T, T, int> comp) : this(null, comp) { }
+        
+        public SkewHeap(IEnumerable<T> source) : this(source, null) { }
+
+        public SkewHeap(IEnumerable<T> source, Func<T, T, int> compare)
         {
-            HeapNode.CompareTo = (comp ?? ((T l, T r) => l.CompareTo(r)));
+            HeapNode.CompareTo = (compare ?? ((T l, T r) => l.CompareTo(r)));
             this.topNode = null;
-            this.count_ = 0;
+            this.Count = 0;
+            foreach (var e in source) this.Push(e);
         }
+
         /// <summary>
         /// 捨てる
         /// </summary>
         public void Pop()
         {
             this.topNode = HeapNode.Meld(this.topNode.l, this.topNode.r);
-            this.count_--;
+            this.Count--;
         }
         /// <summary>
         /// 見る
         /// </summary>
-        public T Top()
-        {
-            return this.topNode.val;
-        }
+        public T Top() => this.topNode.val;
+
         /// <summary>
         /// 入れる
         /// </summary>
         public void Push(T val)
         {
             this.topNode = HeapNode.Meld(this.topNode, new HeapNode(val));
-            this.count_++;
+            this.Count++;
         }
         /// <summary>
         /// 出す
@@ -81,13 +88,12 @@ namespace ProgrammingContest.Library
             this.Pop();
             return retVal;
         }
-        public bool IsEmpty()
-        {
-            return this.topNode == null;
-        }
+
+        public bool IsEmpty => this.topNode == null;
+
         public void Merge(SkewHeap<T> otherHeap)
         {
-            this.count_ += otherHeap.Count;
+            this.Count += otherHeap.Count;
             this.topNode = HeapNode.Meld(this.topNode, otherHeap.topNode);
         }
     }
